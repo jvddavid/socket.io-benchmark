@@ -12,16 +12,16 @@ class Client:
         self.sio.on('message', self.on_message)
         self.sio.on('my message', self.on_my_message)
 
-    async def connect(self, url):
-        await self.sio.connect(url, transports=['websocket'])
+    async def connect(self, url, transport='websocket'):
+        await self.sio.connect(url, transports=[transport])
 
     async def on_connect(self):
         print('Connected to server')
         print('my sid is', self.sio.sid)
         print('my transport is', self.sio.transport)
 
-    async def on_disconnect(self):
-        print('Disconnected from server')
+    async def on_disconnect(self, reason):
+        print('Disconnected from server', reason)
 
     count = 0
     async def on_message(self, data):
@@ -40,18 +40,21 @@ class Client:
 clients: list[Client] = []
 async def main():
     parser = argparse.ArgumentParser(description="Load tester for socket.io applications")
-    parser.add_argument('-s', '--host', action='store', default='localhost')
-    parser.add_argument('-p', '--port', action='store', default=3000)
+    parser.add_argument('-u', '--url', action='store')
+    parser.add_argument('-t', '--transport', action='store', default='websocket')
     parser.add_argument('-c', '--concurrency', type=int, default=1)
     
     args = parser.parse_args(sys.argv[1:])
-
-    url = f'http://{args.host}:{args.port}'
+    url = args.url
+    if not url:
+        print("Please provide a URL")
+        sys.exit(1)
+    transport = args.transport
 
     for i in range(args.concurrency):
         client = Client()
         clients.append(client)
-        asyncio.create_task(client.connect(url))
+        asyncio.create_task(client.connect(url, transport))
 
     while True:
         for client in clients:
