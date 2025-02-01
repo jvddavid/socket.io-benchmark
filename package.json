@@ -1,0 +1,77 @@
+{
+  "name": "@jvddavid/socket.io-benchmark",
+  "license": "MIT",
+  "version": "1.0.0",
+  "description": "A simple socket.io benchmark",
+  "keywords": [
+    "socket.io",
+    "benchmark",
+    "node",
+    "nodejs",
+    "typescript"
+  ],
+  "author": {
+    "name": "João Victor Davi de Oliveira",
+    "email": "j.victordavid2@gmail.com",
+    "url": "https://github.com/jvddavid/socket.io-benchmark"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+ssh://git@github.com/jvddavid/socket.io-benchmark.git"
+  },
+  "bugs": {
+    "url": "https://github.com/jvddavid/socket.io-benchmark/issues"
+  },
+  "homepage": "https://github.com/jvddavid/socket.io-benchmark",
+  "engines": {
+    "node": ">=22",
+    "pnpm": ">=9"
+  },
+  "packageManager": "pnpm@9.15.0",
+  "type": "module",
+  "main": "./dist/index.cjs",
+  "module": "./dist/index.mjs",
+  "types": "./dist/index.d.cts",
+  "files": [
+    "dist",
+    "README.md",
+    "package.json",
+    "tsconfig.json"
+  ],
+  "exports": {
+    "require": {
+      "types": "./dist/index.d.cts",
+      "default": "./dist/index.cjs"
+    },
+    "import": {
+      "types": "./dist/index.d.mts",
+      "default": "./dist/index.mjs"
+    }
+  },
+  "devDependencies": {
+    "@eslint/js": "^9.19.0",
+    "@stylistic/eslint-plugin": "^3.0.1",
+    "@types/node": "^22.13.0",
+    "eslint": "^9.19.0",
+    "pkgroll": "^2.6.1",
+    "tsx": "^4.19.2",
+    "typescript": "^5.7.3",
+    "typescript-eslint": "^8.22.0",
+    "vitest": "^3.0.4"
+  },
+  "scripts": {
+    "prepublishOnly": "npm run type:check && npm run lint && npm run build && npm run test",
+    "start": "node dist/index.mjs",
+    "type:check": "tsc --noEmit",
+    "build": "pkgroll --clean-dist --minify --target=es2022 --target=node22",
+    "lint": "eslint src",
+    "lint:fix": "eslint --fix src",
+    "dev": "tsx --watch src/index.ts",
+    "test": "vitest run",
+    "test:watch": "vitest"
+  },
+  "dependencies": {
+    "close-with-grace": "^2.2.0",
+    "socket.io": "^4.8.1"
+  }
+}
