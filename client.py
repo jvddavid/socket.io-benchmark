@@ -15,7 +15,7 @@ class Client:
     async def connect(self, url, transport='websocket'):
         await self.sio.connect(url, headers={
             'Origin': 'http://localhost:3000'
-        }, transports=[transport], retry=True, retry_delay=1, retry_delay_max=5, retry_attempts=5000)
+        }, transports=[transport], retry=True)
 
     async def on_connect(self):
         print('Connected to server')
