@@ -9,29 +9,42 @@ class Client:
         self.sio = socketio.AsyncClient()
         self.sio.on('connect', self.on_connect)
         self.sio.on('disconnect', self.on_disconnect)
-        self.sio.on('message', self.on_message)
-        self.sio.on('my message', self.on_my_message)
+        self.sio.on('time', self.on_message)
+        self.sio.on('candle', self.on_message)
 
     async def connect(self, url, transport='websocket'):
-        await self.sio.connect(url, transports=[transport])
+        await self.sio.connect(url, headers={
+            'Origin': 'http://localhost:3000'
+        }, transports=[transport], retry=True, retry_delay=1, retry_delay_max=5, retry_attempts=5000)
 
     async def on_connect(self):
         print('Connected to server')
         print('my sid is', self.sio.sid)
         print('my transport is', self.sio.transport)
+        await self.sio.emit('subscribe', {
+            'id': 1857,
+            'size': 60,
+        })
+        await self.sio.emit('subscribe', {
+            'id': 1857,
+            'size': 60,
+        })
 
     async def on_disconnect(self, reason):
         print('Disconnected from server', reason)
 
     count = 0
-    async def on_message(self, data):
+    async def on_message(self, data, *args):
         self.count += 1
+
+    async def on_subscribe(self, data):
+        print('Subscribed:', data)
 
     async def on_my_message(self, data):
         print('Received my message:', data)
 
     def print(self):
-        print(f"Client {self.sio.sid} at {datetime.now()} received {self.count} messages")
+        print(f"Client {self.sio.sid} at {datetime.now()} received {self.count} messages with status {self.sio.eio.state}")
         self.count = 0
 
     async def close(self):
