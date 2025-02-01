@@ -39,7 +39,7 @@ class Client:
 
 clients: list[Client] = []
 async def main():
-    parser = argparse.ArgumentParser(description="Load tester for socket.io applications (customized for ROAR)")
+    parser = argparse.ArgumentParser(description="Load tester for socket.io applications")
     parser.add_argument('-s', '--host', action='store', default='localhost')
     parser.add_argument('-p', '--port', action='store', default=3000)
     parser.add_argument('-c', '--concurrency', type=int, default=1)
